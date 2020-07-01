@@ -45,9 +45,13 @@ func WsHander(ws *websocket.Conn) {
 	//消息读取,每个客户端数据
 	for {
 		var req []byte
+		if ws == nil {
+			continue
+		}
 		_, data, err := ws.ReadMessage()
 		if err != nil {
 			log.Printf("[错误-read]: %v", err)
+			continue
 		}
 
 		// @ping: a ping
@@ -55,6 +59,7 @@ func WsHander(ws *websocket.Conn) {
 			log.Printf("[心跳检测]: %v", string(data))
 			continue
 		}
+		//data = data[1 : len(data)-1]
 		log.Printf("[消息内容]: %v", string(data))
 
 		req = data
@@ -96,7 +101,7 @@ func handleMessages() {
 			//	continue
 			//}
 			// next have same group_id
-			err := client.Conn.WriteJSON(string(msg))
+			err := client.Conn.WriteMessage(websocket.TextMessage, msg)
 			if err != nil { //当连接挂了
 				//fmt.Println("客户:",client,"聊天记录写入失败")
 				log.Printf("[错误-write]: %v", err)

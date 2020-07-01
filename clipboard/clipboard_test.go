@@ -8,4 +8,7 @@ func TestWrite(t *testing.T) {
 	Write([]byte("new clip"))
 	b, _ = Read()
 	t.Log(string(b))
+	Write([]byte("\"new clip2\""))
+	b, _ = Read()
+	t.Log(string(b))
 }
