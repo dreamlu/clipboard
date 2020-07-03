@@ -36,3 +36,8 @@ jobs:
 
     - name: Test
       run: go test -v -o main
+
+    - name: Release go
+      run: GOOS=linux GOARCH=amd64 go build -ldflags '-w -s' -tags netgo -o main
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
