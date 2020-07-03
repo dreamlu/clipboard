@@ -45,9 +45,6 @@ func WsHander(ws *websocket.Conn) {
 	//消息读取,每个客户端数据
 	for {
 		var req []byte
-		if ws == nil {
-			continue
-		}
 		_, data, err := ws.ReadMessage()
 		if err != nil {
 			log.Printf("[错误-read]: %v", err)
@@ -76,15 +73,14 @@ func WsHander(ws *websocket.Conn) {
 
 		//clipboard.ClipContent <- req
 		if err != nil {
-			log.Printf("[错误-read]: %v", err)
+			log.Printf("[错误-read2]: %v", err)
 			//delete(clients, ws) //删除对应连接
-			for _, v := range clients { //删除对应连接,emm...暂时先遍历删除～
-				//fmt.Println(v)
-				if v.Conn == ws {
-					break
-				}
+			for k, v := range clients { //删除对应连接,emm...暂时先遍历删除～
+				v.Conn.Close()
+				// 删除失效连接
+				clients = append(clients[:k], clients[k+1:]...)
 			}
-			break
+			//break
 		}
 	}
 }
@@ -106,9 +102,9 @@ func handleMessages() {
 				//fmt.Println("客户:",client,"聊天记录写入失败")
 				log.Printf("[错误-write]: %v", err)
 				client.Conn.Close()
+				// 删除失效连接
 				clients = append(clients[:k], clients[k+1:]...)
 				////记录该用户最后读的消息id,广播中处理,待优化
-				//chat.CreateGroupLastMsg(msg.GroupId,msg.FromUid,msg.Flag,msg.ID)
 				continue
 			}
 		}

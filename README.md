@@ -16,6 +16,6 @@ linux: 依赖`xclip`, 安装`sudo apt install xclip`
 1.提供剪切板实时共享服务端  
 
 TODO  
-1.安装优化,支持docker等  
+1.安装优化  
 2.端口可修改,默认9001  
 3.支持更多系统  
